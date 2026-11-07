@@ -5,8 +5,8 @@ import astolfo.module.hidden.HypixelGameTracker;
 import astolfo.module.hidden.PlayerPotionEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.TwoArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.TwoArgFunction;
 
 public final class IsPotionActive extends TwoArgFunction {
    @Override

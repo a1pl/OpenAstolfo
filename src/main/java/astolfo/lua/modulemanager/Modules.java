@@ -3,10 +3,10 @@ package astolfo.lua.modulemanager;
 import astolfo.Astolfo;
 import astolfo.lua.ModuleManagerLibrary2;
 import astolfo.module.ModuleInfo;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class Modules extends VarArgFunction {
    @Override
@@ -17,7 +17,7 @@ public final class Modules extends VarArgFunction {
          }
       }
 
-      LuaValue[] luaValues = (org.luaj.vm2.LuaValue[])(ModuleManagerLibrary2.getModuleNames().toArray(new LuaValue[0]));
+      LuaValue[] luaValues = (LuaValue[])(ModuleManagerLibrary2.getModuleNames().toArray(new LuaValue[0]));
       return LuaValue.varargsOf(new LuaValue[]{new LuaTable(LuaValue.varargsOf(luaValues))});
    }
 }

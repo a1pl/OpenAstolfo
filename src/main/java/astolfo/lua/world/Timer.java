@@ -5,8 +5,8 @@ import astolfo.ClientAccess;
 import astolfo.module.ModuleManager;
 import astolfo.module.player.Scaffold;
 import astolfo.util.GameUtil;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public final class Timer extends ZeroArgFunction {
    @Override

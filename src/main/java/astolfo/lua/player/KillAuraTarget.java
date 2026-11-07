@@ -4,8 +4,8 @@ import astolfo.ClientAccess;
 import astolfo.module.combat.KillAura;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public final class KillAuraTarget extends ZeroArgFunction {
    @Override

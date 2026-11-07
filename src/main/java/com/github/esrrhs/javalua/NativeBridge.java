@@ -1,0 +1,436 @@
+package com.github.esrrhs.javalua;
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+
+/**
+ * 与 {@code luashim} 动态库之间的那层 —— {@code dlopen}、句柄表、进出 native 的
+ * 那几个原语。
+ * <p>
+ * 加载分三步，缺一不可：
+ * <ol>
+ *   <li>{@code System.load} 把库装进来（这步是 {@code RTLD_LOCAL}）；</li>
+ *   <li>再 {@code dlopen} 同一路径一遍、带 {@code RTLD_GLOBAL}——不提升到全局
+ *       命名空间，后面 {@code dlopen} 的扩展 .so 在 flat namespace 里<b>根本看
+ *       不见</b> {@code lua_*}；</li>
+ *   <li>{@code init()} 让 C 侧缓存住 {@code dispatch} 的方法 id。</li>
+ * </ol>
+ * <p>
+ * 装不上（没这个平台的库、或者不允许加载动态库）时 {@link #AVAILABLE} 是
+ * false，此时 io 库退回纯 Java 的实现（{@code RandomAccessFile}），
+ * {@code package.loadlib} 走「未启用动态库」的兜底分支——不能因为
+ * native 层不可用就让整个引擎起不来。
+ * <p>
+ * 退回哪条路径可以用 <b>{@code -Djavalua.nonative}</b> 强制：设了这个属性就
+ * 直接当作装不上，连库都不去装。io 的两条路径要各自跑一遍差分才有覆盖，
+ * 而装得上库的机器默认只会走 C 那一条。
+ */
+public final class NativeBridge {
+
+    /** native 层能不能用 */
+    public static final boolean AVAILABLE;
+
+    /** 装不上的原因，调试用 */
+    public static final String LOAD_ERROR;
+
+    private static final ArrayList<Object> HANDLES = new ArrayList<>();
+    private static final IdentityHashMap<Object, Integer> HANDLE_OF = new IdentityHashMap<>();
+
+    static {
+        boolean ok = false;
+        String err = null;
+        if (System.getProperty("javalua.nonative") != null) {
+            // 强制走纯 Java 路径，见类注释
+            err = "disabled by -Djavalua.nonative";
+        } else {
+            try {
+                ok = load();
+            } catch (Throwable t) {
+                err = String.valueOf(t.getMessage());
+            }
+        }
+        AVAILABLE = ok;
+        LOAD_ERROR = err;
+    }
+
+    private NativeBridge() {
+    }
+
+    /* ==================== 加载 ==================== */
+
+    private static boolean load() throws Exception {
+        String p = System.getProperty("javalua.luashim", System.getProperty("fakescript.luashim"));
+        if (p == null) {
+            Path f = extractBundled();
+            p = (f == null) ? null : f.toString();
+        }
+        if (p == null) {
+            return false;
+        }
+        System.load(p);
+        // System.load 是 RTLD_LOCAL，必须再提升一次
+        long h = dlopen(p, true);
+        if (h == 0) {
+            return false;
+        }
+        init();
+        return true;
+    }
+
+    /** 随包带的库（{@code native/<平台>/...}）解到临时目录再加载 */
+    private static Path extractBundled() throws Exception {
+        String plat = platform();
+        if (plat == null) {
+            return null;
+        }
+        String res = "/native/" + plat + "/" + libFileName();
+        try (InputStream in = NativeBridge.class.getResourceAsStream(res)) {
+            if (in == null) {
+                return null;
+            }
+            Path dir = Files.createTempDirectory("luashim");
+            Path out = dir.resolve(libFileName());
+            Files.copy(in, out);
+            out.toFile().deleteOnExit();
+            dir.toFile().deleteOnExit();
+            return out;
+        }
+    }
+
+    private static String platform() {
+        String os = System.getProperty("os.name", "").toLowerCase();
+        String arch = System.getProperty("os.arch", "").toLowerCase();
+        if (os.contains("mac") || os.contains("darwin")) {
+            return "darwin-" + (arch.contains("aarch64") || arch.contains("arm") ? "arm64" : "x86_64");
+        }
+        if (os.contains("win")) {
+            return "windows-" + (arch.contains("64") ? "x86_64" : "x86");
+        }
+        if (os.contains("linux")) {
+            return "linux-" + (arch.contains("aarch64") || arch.contains("arm") ? "arm64" : "x86_64");
+        }
+        return null;
+    }
+
+    private static String libFileName() {
+        String os = System.getProperty("os.name", "").toLowerCase();
+        if (os.contains("mac") || os.contains("darwin")) {
+            return "libluashim.dylib";
+        }
+        if (os.contains("win")) {
+            return "luashim.dll";
+        }
+        return "libluashim.so";
+    }
+
+    /* ==================== JNI ==================== */
+
+    static native void init();
+
+    static native long dlopen(String path, boolean global);
+
+    static native long dlsym(long handle, String name);
+
+    static native String dlerror();
+
+    /**
+     * 调一个 {@code lua_CFunction}。
+     *
+     * @return {@code >=0} 是返回值个数；{@code -1} 是 longjmp（{@code lua_error}）；
+     *         {@code -2} 是 yield；{@code -3} 是函数指针为空
+     */
+    static native int invokeC(long fn, long L);
+
+    /**
+     * 调一个 {@code lua_KFunction}（续体）：
+     * {@code int (*)(lua_State *L, int status, lua_KContext ctx)}。
+     *
+     * @return 同 {@link #invokeC}
+     */
+    static native int invokeK(long fn, long L, int status, int ctx);
+
+    /**
+     * {@code luaL_newstate} 装的那个默认 panic 函数的地址。
+     * {@code lua_atpanic} 第一次要把它作为「旧值」交回去（见
+     * {@code Api#lua_atpanic}）。
+     */
+    static native long defaultPanic();
+
+    /**
+     * 把警告消息交给 C 的 {@code lua_WarnFunction}：
+     * {@code void (*)(void *ud, const char *msg, int tocont)}。
+     */
+    static native void invokeWarn(long fn, long ud, byte[] msg, boolean tocont);
+
+    /** 取回 C 侧接住的 Java 异常（{@code lua_error} 那一跳的载荷） */
+    static native Throwable takePending();
+
+    static native long alloc(long n);
+
+    static native void free(long p);
+
+    /** 从 {@code p} 读一个 NUL 结尾的 C 串 */
+    static native byte[] bytesAt(long p);
+
+    /** 从 {@code p} 读 {@code n} 个字节（Lua 串可以含 {@code \0}，不能按 C 串读） */
+    static native byte[] bytesAtN(long p, int n);
+
+    /** 拷进 C 侧的环形缓冲，返回一个 NUL 结尾的 {@code const char*} */
+    static native long strToNative(byte[] b);
+
+    /** 往 {@code alloc} 出来的块里写字节并补 NUL；见 {@link LuaString#nativePtr} */
+    static native void putBytes(long p, byte[] b);
+
+    static native void put64(long p, long v);
+
+    static native long get64(long p);
+
+    static native void put32(long p, int v);
+
+    static native int get32(long p);
+
+    /** 句柄换回 {@code lua_State*}：给那些要把 {@code L} 交回 C 的回调用 */
+    static native long statePtr(long handle);
+
+    /** 回调任意 C 函数指针：reader / writer / hook / alloc / 续体都走这条 */
+    static native long callPtr(long fn, long a0, long a1, long a2, long a3);
+
+    static native void bufAppend(long b, byte[] bytes);
+
+    static native void dbgFill(long ar, long[] vals);
+
+    static native void dbgShortSrc(long ar, byte[] b);
+
+    /** {@code sizeof(lua_Debug)}：Java 侧要给 C 的钩子造一块 */
+    static native long dbgSize();
+
+    /* ==================== C FILE* 操作 ==================== */
+
+    static native long cFopen(byte[] path, byte[] mode);
+    static native int cFclose(long f);
+    static native int cFread(long f, byte[] buf, int off, int len);
+    static native int cFwrite(long f, byte[] buf, int off, int len);
+    static native int cFseek(long f, long offset, int whence);
+    static native long cFtell(long f);
+    static native int cFflush(long f);
+    static native int cFerror(long f);
+    static native void cClearerr(long f);
+    static native int cFeof(long f);
+    static native byte[] cFgets(long f, int maxLen);
+    static native int cFgetc(long f);
+    static native int cFputc(long f, int c);
+    static native long cPopen(byte[] cmd, byte[] mode);
+    static native int cPclose(long f);
+    static native int cFileno(long f);
+    static native long cSizeofLuaLStream();
+    static native long cNewLuaLStream(long filePtr, long closefPtr);
+    static native long cStreamGetF(long streamPtr);
+
+    /** 取 C 标准流的 FILE*：0=stdin, 1=stdout, 2=stderr */
+    static native long cStdStream(int which);
+
+    /** 取 C 的 {@code errno}（{@code cFopen} 等失败后读它） */
+    static native int cGetErrno();
+
+    /**
+     * 调 C 的 {@code setlocale(category, locale)}。
+     * <p>
+     * {@code locale} 为 {@code null} 时只查询不设置。返回的字节数组是 C 运行时
+     * 的当前 locale 名字（UTF-8 编码），设置失败返回 {@code null}。
+     */
+    /**
+     * @param catIdx {@code os.setlocale} 的类目<b>下标</b>（0=all、1=collate、
+     *     2=ctype、3=monetary、4=numeric、5=time）。shim 内部按 {@code loslib.c}
+     *     那一张表翻成本平台的 {@code LC_*} 常量——<b>编号两边不一样</b>
+     *     （glibc：{@code LC_CTYPE=0 … LC_ALL=6}；macOS：{@code LC_ALL=0 …}），
+     *     所以这个换算必须留在 C 侧。
+     */
+    static native byte[] cSetlocale(int category, byte[] locale);
+
+    /**
+     * 取 C 的 {@code localeconv()->decimal_point[0]}，也就是
+     * {@code lua_getlocaledecpoint()}（{@code luaconf.h}）。
+     * <p>
+     * Lua 的数字进出都过这个字符，所以 {@code os.setlocale} 一改它就得跟着变。
+     * <p>
+     * shim 里那份记录是<b>设 locale 时顺手记下的</b>（{@code newlocale} +
+     * {@code nl_langinfo_l(RADIXCHAR)}），不是现场问 {@code localeconv()}：
+     * CI 上实测 JVM 进程里 {@code setlocale(LC_ALL, "pt_BR.UTF-8")} 返回了名字
+     * 却只落实 {@code LC_CTYPE}，{@code localeconv} 一直答 {@code '.'}。没人设过
+     * locale 时仍然现场问 {@code localeconv()}，与 C 一致。native 层不在时没人
+     * 能改 locale，调用方直接按 {@code '.'} 走（见 {@link Numeral#decpoint()}）。
+     */
+    static native int cLocaleDecpoint();
+
+    /**
+     * {@code strftime} for one conversion (or a short format like {@code "%c"}).
+     * <p>
+     * {@code fmt} is the format bytes <b>without</b> a trailing NUL (this method
+     * copies and terminates). {@code utc} selects {@code gmtime_r} vs
+     * {@code localtime_r}. Returns the formatted bytes, or {@code null} on
+     * failure (bad time / empty result).
+     * <p>
+     * Used by {@code os.date} so locale-dependent names ({@code %A}, {@code %B},
+     * {@code %c}, …) follow {@code os.setlocale}, matching C Lua.
+     */
+    static native byte[] cStrftime(long epochSec, boolean utc, byte[] fmt);
+
+
+    /**
+     * 调 C 的 {@code waitpid(pid, &status, 0)}，拿原始退出状态。
+     * <p>
+     * Java 的 {@code Process.waitFor()} 只给退出码，信号杀死的进程一律按 exit 报。
+     * 这个方法把原始 status 写到 {@code statusOut[0]}，调用方再用
+     * {@link #cDecodeStatus} 解码。返回 0 表示成功，-1 表示 waitpid 失败。
+     */
+    static native int cWaitpid(long pid, long[] statusOut);
+
+    /**
+     * 把 {@code waitpid} 拿到的原始 status 解码成四个字段。
+     * <p>
+     * {@code out} 必须是长度 >= 4 的 {@code long[]}，填进去的是：
+     * <ol>
+     *   <li>{@code WIFEXITED(status)}：1 = 正常退出，0 = 否</li>
+     *   <li>{@code WEXITSTATUS(status)}：退出码（仅当 [0] 为 1 时有意义）</li>
+     *   <li>{@code WIFSIGNALED(status)}：1 = 被信号杀死，0 = 否</li>
+     *   <li>{@code WTERMSIG(status)}：信号编号（仅当 [2] 为 1 时有意义）</li>
+     * </ol>
+     */
+    static native void cDecodeStatus(int status, long[] out);
+
+    /**
+     * 用 {@code posix_spawn} 起一个<b>不属于 JVM</b> 的子进程跑
+     * {@code /bin/sh -c cmd}（{@code argv[0]} 是 {@code "sh"}，与 C 的
+     * {@code system()} 一致）。
+     * <p>
+     * 为什么要自己起：{@code ProcessBuilder} 的孩子由 JVM 认领，JDK 的 reaper
+     * 线程会替我们 {@code waitpid} 掉它，于是原始 status 永远拿不到——被信号
+     * 杀死的进程只能报成 {@code ("exit", 128+n)}，而且是<b>抢输才这样</b>，
+     * 同一行脚本两次跑出两种答案。C 生的孩子 JVM 不认识，
+     * {@link #cWaitpid} 是唯一的收割者。
+     * <p>
+     * 三条流按需接管，其余继承（与 C 的 {@code system()} / {@code popen()}
+     * 同构）；{@code fds} 回来三个父进程用的 fd：
+     * <ol>
+     *   <li>读子进程的 stdout（没接管则 -1）</li>
+     *   <li>读子进程的 stderr（没接管则 -1）</li>
+     *   <li>写子进程的 stdin（没接管则 -1）</li>
+     * </ol>
+     * 起不来返回 -1。
+     * <p>
+     * 顺带把子进程的信号全恢复默认处置：{@code SIG_IGN} 是<b>穿过 exec 继承</b>
+     * 的，而 JVM 把 SIGPIPE / SIGQUIT 设成了忽略——不处理的话
+     * {@code io.popen} 那边该拿的 {@code ("signal",13)} 永远拿不到。
+     */
+    static native long cSpawn(byte[] cmd, boolean outPipe, boolean errPipe,
+            boolean inPipe, long[] fds);
+
+    /** 从 {@link #cSpawn} 交回来的 fd 上读一块；返回字节数，0 是 EOF，负数是出错 */
+    static native int cPipeRead(long fd, byte[] buf);
+
+    /** 往 {@link #cSpawn} 交回来的 fd 上写满 {@code len} 字节；返回实际写入数，负数是出错 */
+    static native int cPipeWrite(long fd, byte[] buf, int off, int len);
+
+    /** 关掉 {@link #cSpawn} 交回来的一个 fd；负数（没接管）直接忽略 */
+    static native void cCloseFd(long fd);
+
+    /* ==================== C 内存的生命周期 ==================== */
+
+    /**
+     * 一块「跟着某个 Java 对象活到死」的 C 内存。
+     * <p>
+     * 环形缓冲（{@code ring_put}，32 格）只能保证「接下来 32 次调用之内还
+     * 有效」，而 C 的 {@code lua_tolstring} 交回去的是<b>字符串自己的存储</b>，
+     * 只要那个字符串还在就一直有效、而且<b>两次取同一个值必得同一个地址</b>。
+     * 于是这里改成按对象惰性分配 + {@code Cleaner} 回收：地址稳定，也不漏。
+     */
+    /*
+     * Java 8 backport: java.lang.ref.Cleaner is Java 9+, so owners are tracked
+     * with PhantomReferences drained by one lazily started daemon thread.
+     */
+    private static final java.lang.ref.ReferenceQueue<Object> FREE_QUEUE =
+            new java.lang.ref.ReferenceQueue<>();
+    private static final java.util.Set<FreeRef> PENDING_FREES =
+            java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
+    private static volatile boolean freeThreadStarted;
+
+    private static final class FreeRef extends java.lang.ref.PhantomReference<Object> {
+        private final long p;
+
+        FreeRef(Object owner, long p) {
+            super(owner, FREE_QUEUE);
+            this.p = p;
+        }
+    }
+
+    /** 让 {@code p} 随 {@code owner} 一起被回收；{@code p} 必须是 {@code alloc} 来的 */
+    static void freeWith(Object owner, long p) {
+        PENDING_FREES.add(new FreeRef(owner, p));
+        if (!freeThreadStarted) {
+            startFreeThread();
+        }
+    }
+
+    private static synchronized void startFreeThread() {
+        if (freeThreadStarted) {
+            return;
+        }
+        Thread t = new Thread(() -> {
+            while (true) {
+                try {
+                    FreeRef ref = (FreeRef) FREE_QUEUE.remove();
+                    PENDING_FREES.remove(ref);
+                    free(ref.p);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }, "javalua-native-free");
+        t.setDaemon(true);
+        t.start();
+        freeThreadStarted = true;
+    }
+
+    /* ==================== 句柄 ==================== */
+
+    /** {@code lua_State*} 在 C 侧只是个下标；这里把下标换回 {@link LuaState} */
+    public static synchronized long handle(Object o) {
+        Integer h = HANDLE_OF.get(o);
+        if (h != null) {
+            return h;
+        }
+        HANDLES.add(o);
+        int idx = HANDLES.size(); // 1 起，0 留给「没有」
+        HANDLE_OF.put(o, idx);
+        return idx;
+    }
+
+    public static synchronized LuaState state(long h) {
+        if (h <= 0 || h > HANDLES.size()) {
+            return null;
+        }
+        Object o = HANDLES.get((int) (h - 1));
+        return o instanceof LuaState ? (LuaState) o : null;
+    }
+
+    /* ==================== C 进 Java 的入口 ==================== */
+
+    /** {@code luashim_call} 的落点：C 侧靠方法签名 {@code (IJJJJJJD)J} 找到它 */
+    static long dispatch(int id, long a0, long a1, long a2,
+            long a3, long a4, long a5, double d0) {
+        return CApi.dispatch(id, a0, a1, a2, a3, a4, a5, d0);
+    }
+
+    static double dispatchD(int id, long a0, long a1, long a2,
+            long a3, long a4, long a5, double d0) {
+        return CApi.dispatchD(id, a0, a1, a2, a3, a4, a5, d0);
+    }
+
+    /** 只是为了让 {@code Paths} 有个引用，免得编译器警告未用 */
+    static Path tmpRoot() {
+        return Paths.get(System.getProperty("java.io.tmpdir", "."));
+    }
+}

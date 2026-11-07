@@ -19,12 +19,12 @@ import astolfo.setting.Setting;
 import astolfo.setting.SettingType;
 import astolfo.setting.StringSetting;
 import java.util.ArrayList;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.ThreeArgFunction;
-import org.luaj.vm2.lib.TwoArgFunction;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
+import astolfo.lua.vm.ThreeArgFunction;
+import astolfo.lua.vm.TwoArgFunction;
+import astolfo.lua.vm.VarArgFunction;
 
 public class ModuleManagerLibrary2
 extends TwoArgFunction

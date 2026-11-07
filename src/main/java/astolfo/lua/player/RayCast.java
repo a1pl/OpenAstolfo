@@ -2,9 +2,9 @@ package astolfo.lua.player;
 
 import astolfo.util.GameUtil;
 import net.minecraft.util.MovingObjectPosition;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class RayCast extends VarArgFunction {
    @Override

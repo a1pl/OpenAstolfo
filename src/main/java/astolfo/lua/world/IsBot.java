@@ -4,8 +4,8 @@ import astolfo.lua.WorldLibrary;
 import astolfo.module.hidden.BotDetector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
 
 public final class IsBot extends OneArgFunction {
    @Override

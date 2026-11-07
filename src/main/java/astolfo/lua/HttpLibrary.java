@@ -11,11 +11,11 @@ import astolfo.util.HttpRequest;
 import astolfo.util.HttpUtil;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.TwoArgFunction;
+import astolfo.lua.vm.Globals;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
+import astolfo.lua.vm.TwoArgFunction;
 
 public class HttpLibrary extends TwoArgFunction implements ClientAccess {
    public Globals globals;

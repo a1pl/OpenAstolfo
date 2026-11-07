@@ -1,7 +1,7 @@
 package astolfo.command;
 
 import astolfo.ClientAccess;
-import org.luaj.vm2.LuaValue;
+import astolfo.lua.vm.LuaValue;
 
 public abstract class Command extends AbstractCommand implements ClientAccess {
    public LuaValue luaTable;

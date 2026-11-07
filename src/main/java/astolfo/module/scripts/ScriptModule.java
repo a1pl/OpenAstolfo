@@ -41,9 +41,9 @@ import net.minecraft.network.play.client.C19PacketResourcePackStatus;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
+import astolfo.lua.vm.LuaError;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
 import org.lwjgl.input.Mouse;
 
 public final class ScriptModule extends Module {

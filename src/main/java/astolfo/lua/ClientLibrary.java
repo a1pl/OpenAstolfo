@@ -9,11 +9,11 @@ import astolfo.lua.client.Print;
 import astolfo.lua.client.Subtitle;
 import astolfo.lua.client.Time;
 import astolfo.lua.client.Title;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.TwoArgFunction;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
+import astolfo.lua.vm.TwoArgFunction;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public class ClientLibrary extends TwoArgFunction implements ClientAccess {
    public static final ZeroArgFunction guiNameFunction = new GuiName();

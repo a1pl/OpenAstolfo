@@ -3,13 +3,13 @@ package astolfo.lua;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import org.luaj.vm2.Buffer;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.TwoArgFunction;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.Buffer;
+import astolfo.lua.vm.Globals;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.TwoArgFunction;
+import astolfo.lua.vm.VarArgFunction;
 
 public class OsLibrary extends TwoArgFunction {
    private static final int DIFFTIME = 2;

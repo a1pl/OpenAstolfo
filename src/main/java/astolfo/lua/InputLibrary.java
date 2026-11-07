@@ -6,11 +6,11 @@ import astolfo.lua.input.GetKeyNumber;
 import astolfo.lua.input.GetScroll;
 import astolfo.lua.input.IsKeyDown;
 import astolfo.lua.input.IsMouseDown;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.TwoArgFunction;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
+import astolfo.lua.vm.TwoArgFunction;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public class InputLibrary extends TwoArgFunction implements ClientAccess {
    public static final OneArgFunction isKeyDownFunction = new IsKeyDown();

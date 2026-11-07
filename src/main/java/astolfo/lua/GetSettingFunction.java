@@ -3,10 +3,10 @@ package astolfo.lua;
 import astolfo.setting.BooleanSetting;
 import astolfo.setting.NumberSetting;
 import astolfo.setting.Setting;
-import org.luaj.vm2.LuaString;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.jse.CoerceJavaToLua;
+import astolfo.lua.vm.LuaString;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
+import astolfo.lua.vm.CoerceJavaToLua;
 
 public final class GetSettingFunction extends OneArgFunction {
    @Override

@@ -28,9 +28,9 @@ import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
+import astolfo.lua.vm.Globals;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
 import org.lwjgl.input.Mouse;
 
 public class AutoProjectile extends Module {

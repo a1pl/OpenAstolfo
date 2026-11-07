@@ -12,8 +12,8 @@ import astolfo.setting.Setting;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaValue;
+import astolfo.lua.vm.LuaError;
+import astolfo.lua.vm.LuaValue;
 
 public class Module extends AbstractModule implements Toggleable, ClientAccess {
    private boolean enabled;

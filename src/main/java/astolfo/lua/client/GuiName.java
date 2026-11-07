@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public final class GuiName extends ZeroArgFunction {
    @Override

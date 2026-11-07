@@ -1,17 +1,15 @@
 package astolfo.server;
 
-import astolfo.ClientAccess;
-
 public final class HypixelServer extends Server {
    private static String Y;
 
    public HypixelServer() {
-      super("net", "hypixel", ServerType.HYPIXEL);
+      super("cc", "rewound", ServerType.HYPIXEL);
    }
 
    @Override
    public boolean isBrandValid() {
-      return ClientAccess.mc.thePlayer.getClientBrand().toLowerCase().contains("hypixel");
+      return true;
    }
 
    public static void V(String string) {

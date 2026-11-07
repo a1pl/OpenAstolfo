@@ -3,8 +3,8 @@ package astolfo.lua.client;
 import astolfo.ClientAccess;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public final class ChestName extends ZeroArgFunction {
    @Override

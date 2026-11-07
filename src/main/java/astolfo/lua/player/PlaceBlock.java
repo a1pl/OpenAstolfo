@@ -4,9 +4,9 @@ import astolfo.ClientAccess;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class PlaceBlock extends VarArgFunction {
    @Override

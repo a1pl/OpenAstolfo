@@ -6,8 +6,8 @@ import astolfo.script.ScriptManager;
 import astolfo.util.HttpRequest;
 import astolfo.util.HttpUtil;
 import java.util.ArrayList;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.TwoArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.TwoArgFunction;
 
 public final class PostAsync extends TwoArgFunction {
    @Override

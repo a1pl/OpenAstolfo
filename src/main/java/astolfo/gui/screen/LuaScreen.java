@@ -3,9 +3,9 @@ package astolfo.gui.screen;
 import astolfo.ClientAccess;
 import java.io.IOException;
 import net.minecraft.client.gui.GuiScreen;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
+import astolfo.lua.vm.LuaError;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
 
 public class LuaScreen extends GuiScreen implements ClientAccess {
    private final LuaTable callbacks;

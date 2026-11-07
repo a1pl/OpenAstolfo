@@ -4,9 +4,9 @@ import astolfo.Astolfo;
 import astolfo.ClientAccess;
 import astolfo.module.Module;
 import astolfo.module.ModuleManager;
-import org.luaj.vm2.LuaString;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import astolfo.lua.vm.LuaString;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
 
 public final class IsModuleOn4 extends OneArgFunction {
    @Override

@@ -7,10 +7,10 @@ import astolfo.module.Module;
 import astolfo.module.ModuleManager;
 import astolfo.setting.MapSetting;
 import astolfo.setting.Setting;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
-import org.luaj.vm2.lib.jse.CoerceJavaToLua;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
+import astolfo.lua.vm.CoerceJavaToLua;
 
 public final class Option2 extends VarArgFunction {
    @Override

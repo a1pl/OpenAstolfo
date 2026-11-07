@@ -6,10 +6,10 @@ import astolfo.lua.LuaApi;
 import astolfo.lua.ModuleManagerLibrary2;
 import astolfo.module.ModuleManager;
 import astolfo.setting.NumberSetting;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaError;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class RegisterNumber4 extends VarArgFunction {
    @Override

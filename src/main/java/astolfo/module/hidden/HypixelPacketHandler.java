@@ -64,7 +64,7 @@ public final class HypixelPacketHandler extends HiddenModule {
          && GameUtil.isOnHypixel()
          && !mc.isSingleplayer()
          && ServerData.currentServerIp != null
-         && ServerData.currentServerIp.toLowerCase().endsWith("hypixel.net")) {
+         && ServerData.currentServerIp.toLowerCase().endsWith("rewound.cc")) {
          if (packetEvent.getPacket() instanceof C02PacketUseEntity) {
             C02PacketUseEntity c02PacketUseEntity = (C02PacketUseEntity)packetEvent.getPacket();
             if (client.getModuleManager().get(AutoClicker.class).isEnabled()) {

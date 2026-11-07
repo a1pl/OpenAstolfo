@@ -5,9 +5,9 @@ import astolfo.lua.PlayerLibrary;
 import astolfo.util.Rotation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vector3d;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class AnglesForCords extends VarArgFunction {
    @Override

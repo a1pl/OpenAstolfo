@@ -1,10 +1,10 @@
 package astolfo.lua;
 
 import astolfo.ClientAccess;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.TwoArgFunction;
+import astolfo.lua.vm.Globals;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.TwoArgFunction;
 
 public class ClassLibrary extends TwoArgFunction implements ClientAccess {
    public Globals globals;

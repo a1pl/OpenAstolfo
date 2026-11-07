@@ -2,8 +2,8 @@ package astolfo.lua.player;
 
 import astolfo.ClientAccess;
 import astolfo.util.InventoryUtil;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
 
 public final class Drop extends OneArgFunction {
    @Override

@@ -4,10 +4,10 @@ import astolfo.Astolfo;
 import astolfo.ClientAccess;
 import astolfo.module.ModuleInfo;
 import astolfo.module.scripts.ScriptModule;
-import org.luaj.vm2.LuaString;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.TwoArgFunction;
+import astolfo.lua.vm.LuaString;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.TwoArgFunction;
 
 public final class Register extends TwoArgFunction {
    @Override

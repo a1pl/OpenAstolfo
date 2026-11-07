@@ -75,7 +75,7 @@ import net.minecraft.util.Vec3;
 
 public final class GameUtil implements ClientAccess {
    private static final Pattern HYPIXEL_ADDRESS_PATTERN = Pattern.compile(
-      "^(?:(?:(?:.+\\.)?hypixel\\.net)|(?:209\\.222\\.115\\.\\d{1,3})|(?:99\\.198\\.123\\.[123]?\\d?))\\.?(?::\\d{1,5}\\.?)?$", 2
+      "^(?:(?:.+\\.)?rewound\\.cc)\\.?(?::\\d{1,5}\\.?)?$", 2
    );
    private static Pattern colorCodePattern = Pattern.compile("§(.).*§r");
    public static String cachedTabDisplayName = null;

@@ -4,8 +4,8 @@ import astolfo.auth.AuthUtil;
 import astolfo.script.ScriptManager;
 import astolfo.util.HttpRequest;
 import astolfo.util.HttpUtil;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
 
 public final class Get extends OneArgFunction {
    @Override

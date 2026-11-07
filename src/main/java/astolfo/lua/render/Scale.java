@@ -1,7 +1,7 @@
 package astolfo.lua.render;
 
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
 import org.lwjgl.opengl.GL11;
 
 public final class Scale extends OneArgFunction {

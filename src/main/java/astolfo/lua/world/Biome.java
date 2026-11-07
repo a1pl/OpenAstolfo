@@ -4,8 +4,8 @@ import astolfo.ClientAccess;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.chunk.Chunk;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public final class Biome extends ZeroArgFunction {
    @Override

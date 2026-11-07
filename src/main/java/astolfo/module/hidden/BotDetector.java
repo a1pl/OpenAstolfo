@@ -50,7 +50,7 @@ public final class BotDetector extends HiddenModule {
          return true;
       }
 
-      if (GameUtil.isOnServer("hypixel")) {
+      if (GameUtil.isOnServer("rewound")) {
          AbstractClientPlayer abstractClientPlayer = (AbstractClientPlayer)entityPlayer;
          if (abstractClientPlayer.getLocationSkin().toString().equalsIgnoreCase("minecraft:skins/b2f3fc4516774596bfe5c2e16f661106f115ebf651e1287a7cca43399e8c194")) {
             return true;

@@ -15,17 +15,17 @@ import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LoadState;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.compiler.LuaC;
-import org.luaj.vm2.lib.Bit32Lib;
-import org.luaj.vm2.lib.CoroutineLib;
-import org.luaj.vm2.lib.StringLib;
-import org.luaj.vm2.lib.TableLib;
-import org.luaj.vm2.lib.jse.JseBaseLib;
-import org.luaj.vm2.lib.jse.JseMathLib;
+import astolfo.lua.vm.Globals;
+import astolfo.lua.vm.LoadState;
+import astolfo.lua.vm.LuaError;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.LuaC;
+import astolfo.lua.vm.Bit32Lib;
+import astolfo.lua.vm.CoroutineLib;
+import astolfo.lua.vm.StringLib;
+import astolfo.lua.vm.TableLib;
+import astolfo.lua.vm.JseBaseLib;
+import astolfo.lua.vm.JseMathLib;
 
 public class Script implements ClientAccess, JsonSerializable {
    public String path;

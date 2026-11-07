@@ -1,8 +1,8 @@
 package astolfo.lua.player;
 
 import astolfo.lua.PlayerLibrary;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.TwoArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.TwoArgFunction;
 
 public final class ConvertSpeed extends TwoArgFunction {
    @Override

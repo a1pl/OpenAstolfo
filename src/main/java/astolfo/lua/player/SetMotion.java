@@ -1,8 +1,8 @@
 package astolfo.lua.player;
 
 import astolfo.ClientAccess;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ThreeArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ThreeArgFunction;
 
 public final class SetMotion extends ThreeArgFunction {
    @Override

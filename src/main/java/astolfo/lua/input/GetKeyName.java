@@ -1,7 +1,7 @@
 package astolfo.lua.input;
 
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
 import org.lwjgl.input.Keyboard;
 
 public final class GetKeyName extends OneArgFunction {

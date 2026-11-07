@@ -8,9 +8,9 @@ import astolfo.module.Module;
 import astolfo.module.ModuleManager;
 import astolfo.setting.MapSetting;
 import astolfo.setting.Setting;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class SetOption extends VarArgFunction {
    @Override

@@ -1,9 +1,9 @@
 package astolfo.lua.render;
 
 import astolfo.module.hidden.PlayerListTracker;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class WorldToScreen extends VarArgFunction {
    @Override

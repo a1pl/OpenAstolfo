@@ -36,13 +36,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.entity.Entity;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.ThreeArgFunction;
-import org.luaj.vm2.lib.TwoArgFunction;
-import org.luaj.vm2.lib.VarArgFunction;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
+import astolfo.lua.vm.ThreeArgFunction;
+import astolfo.lua.vm.TwoArgFunction;
+import astolfo.lua.vm.VarArgFunction;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public class WorldLibrary extends TwoArgFunction implements ClientAccess {
    public static final Map<Integer, Entity> entitiesById = new HashMap<>();

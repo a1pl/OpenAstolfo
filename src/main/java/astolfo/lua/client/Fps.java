@@ -1,8 +1,8 @@
 package astolfo.lua.client;
 
 import net.minecraft.client.Minecraft;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ZeroArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ZeroArgFunction;
 
 public final class Fps extends ZeroArgFunction {
    @Override

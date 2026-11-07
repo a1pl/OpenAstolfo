@@ -1,14 +1,13 @@
 package astolfo.script;
 
 import astolfo.lua.OsLibrary;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LoadState;
-import org.luaj.vm2.LuaString;
-import org.luaj.vm2.compiler.LuaC;
-import org.luaj.vm2.lib.CoroutineLib;
-import org.luaj.vm2.lib.StringLib;
-import org.luaj.vm2.lib.jse.JseBaseLib;
-import org.luaj.vm2.lib.jse.JseMathLib;
+import astolfo.lua.vm.Globals;
+import astolfo.lua.vm.LoadState;
+import astolfo.lua.vm.LuaC;
+import astolfo.lua.vm.CoroutineLib;
+import astolfo.lua.vm.StringLib;
+import astolfo.lua.vm.JseBaseLib;
+import astolfo.lua.vm.JseMathLib;
 
 public class LuaGlobals {
    public static Globals globals;
@@ -24,6 +23,5 @@ public class LuaGlobals {
       globals.load(new CoroutineLib());
       LoadState.install(globals);
       LuaC.install(globals);
-      LuaString.s_metatable = new ReadOnlyLuaTable(LuaString.s_metatable);
    }
 }

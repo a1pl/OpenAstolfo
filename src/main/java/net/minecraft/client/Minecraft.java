@@ -1743,7 +1743,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
       try {
          if (Util.getOSType() == Util.EnumOS.WINDOWS) {
             String string = new String(Files.readAllBytes(Paths.get("c:\\windows\\system32\\drivers\\etc\\hosts")), StandardCharsets.UTF_8);
-            if (string.contains("hypixel.net")) {
+            if (string.contains("rewound.cc")) {
                hypixelInHostsFile = true;
             }
          }
@@ -1884,7 +1884,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
          && !getMinecraft().integratedServerIsRunning
          && !getMinecraft().isSingleplayer()
          && !DisconnectHandler.disconnected) {
-         if (hypixelInHostsFile && ServerData.currentServerIp.toLowerCase().endsWith("hypixel.net")) {
+         if (hypixelInHostsFile && ServerData.currentServerIp.toLowerCase().endsWith("rewound.cc")) {
          }
 
          lastReportedUsername = getMinecraft().session.getUsername();

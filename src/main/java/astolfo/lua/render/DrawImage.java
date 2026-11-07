@@ -4,9 +4,9 @@ import astolfo.ClientAccess;
 import astolfo.lua.RenderLibrary;
 import astolfo.script.ScriptManager;
 import net.minecraft.client.gui.Gui;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class DrawImage extends VarArgFunction {
    @Override

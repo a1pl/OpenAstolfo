@@ -45,7 +45,7 @@ public final class HypixelAddressCheck {
       }
 
       if (!string.isEmpty()
-         && string.contains("hypixel")
+         && string.contains("rewound")
          && (localHost == null || !string.contains(localHost.getHostName()) && !string.contains(localHost.getHostAddress()))) {
          int i = string.length();
          if (string.contains(":") && Character.isDigit(string.charAt(i - 1))) {
@@ -68,12 +68,12 @@ public final class HypixelAddressCheck {
          if (string.contains(".")) {
             int l = string.lastIndexOf(".") + 1;
             String string4 = string.substring(l);
-            if (!string4.equalsIgnoreCase("net")) {
+            if (!string4.equalsIgnoreCase("cc")) {
                serverIpCache.put(string, false);
                return false;
             } else {
                String string5 = string.substring(0, l - 1);
-               boolean bl = string.equalsIgnoreCase("hypixel.net") || string5.endsWith(".hypixel") || hypixelIps.contains(string5);
+               boolean bl = string.equalsIgnoreCase("rewound.cc") || string5.endsWith(".rewound") || hypixelIps.contains(string5);
                serverIpCache.put(string, bl);
                return bl;
             }
@@ -94,12 +94,12 @@ public final class HypixelAddressCheck {
       }
 
       try {
-         addHypixelAddress(InetAddress.getByName("hypixel.net"));
+         addHypixelAddress(InetAddress.getByName("rewound.cc"));
       } catch (UnknownHostException unknownHostException2) {
       }
 
       try {
-         InetAddress[] inetAddresss = InetAddress.getAllByName("hypixel.net");
+         InetAddress[] inetAddresss = InetAddress.getAllByName("rewound.cc");
 
          for (InetAddress inetAddress : inetAddresss) {
             addHypixelAddress(inetAddress);

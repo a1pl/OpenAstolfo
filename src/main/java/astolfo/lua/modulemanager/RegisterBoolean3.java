@@ -5,10 +5,10 @@ import astolfo.ClientAccess;
 import astolfo.lua.LuaApi;
 import astolfo.module.ModuleManager;
 import astolfo.setting.BooleanSetting;
-import org.luaj.vm2.LuaBoolean;
-import org.luaj.vm2.LuaString;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.ThreeArgFunction;
+import astolfo.lua.vm.LuaBoolean;
+import astolfo.lua.vm.LuaString;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.ThreeArgFunction;
 
 public final class RegisterBoolean3 extends ThreeArgFunction {
    @Override

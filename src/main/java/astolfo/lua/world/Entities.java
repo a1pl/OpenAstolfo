@@ -3,10 +3,10 @@ package astolfo.lua.world;
 import astolfo.ClientAccess;
 import astolfo.lua.WorldLibrary;
 import net.minecraft.entity.Entity;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.Varargs;
+import astolfo.lua.vm.VarArgFunction;
 
 public final class Entities extends VarArgFunction {
    @Override
@@ -24,7 +24,7 @@ public final class Entities extends VarArgFunction {
          WorldLibrary.entitiesById.put(entity.getEntityId(), entity);
       }
 
-      LuaValue[] luaValues = (org.luaj.vm2.LuaValue[])(WorldLibrary.getEntityIdList().toArray(new LuaValue[0]));
+      LuaValue[] luaValues = (LuaValue[])(WorldLibrary.getEntityIdList().toArray(new LuaValue[0]));
       return LuaValue.varargsOf(new LuaValue[]{new LuaTable(LuaValue.varargsOf(luaValues))});
    }
 }

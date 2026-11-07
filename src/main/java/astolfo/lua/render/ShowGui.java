@@ -2,9 +2,9 @@ package astolfo.lua.render;
 
 import astolfo.gui.screen.LuaScreen;
 import net.minecraft.client.Minecraft;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import astolfo.lua.vm.LuaTable;
+import astolfo.lua.vm.LuaValue;
+import astolfo.lua.vm.OneArgFunction;
 
 public final class ShowGui extends OneArgFunction {
    @Override
